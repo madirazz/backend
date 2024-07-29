@@ -17,7 +17,7 @@ const posts = [
 ];
 
 app.get("/posts", (req, res) => {
-  res.send("Hello");
+  res.json(posts);
 });
 
 app.listen(port, () => {

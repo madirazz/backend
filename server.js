@@ -1,27 +1,38 @@
 import express from "express";
+import knex from "knex";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import 'dotenv/config'
+import knexConfig from "./knexfile.js";
+import dotenv from "dotenv";
+import cors from 'cors';
+
+dotenv.config();
 
 const app = express();
+const db = knex(knexConfig);
 const port = 3000;
 
 app.use(express.json());
+app.use(cors());
 
-const posts = [
-  {
-    username: "Razi",
-    title: "My First Post",
-    content: "This is my first blog post!",
-  },
-  {
-    username: "John",
-    title: "My Second Post",
-    content: "This is my Second blog post!",
-  },
-];
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
 
-app.get("/posts", (req, res) => {
-  res.json(posts);
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Please provide username and password" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = { username, password: hashedPassword };
+
+    await db("users").insert(user);
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Database error", err });
+  }
 });
 
 app.post("/login", (req, res) => {

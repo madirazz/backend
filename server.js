@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
     const accessToken = jwt.sign(
       { id: user.id },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "10m" }
     );
     res.json({ accessToken });
   } catch (err) {

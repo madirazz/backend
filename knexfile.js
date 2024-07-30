@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-export default {
+const config = {
   client: "mysql2",
   connection: {
     host: process.env.DB_HOST,
@@ -16,3 +16,5 @@ export default {
     directory: "./seeds",
   },
 };
+
+export default config;
